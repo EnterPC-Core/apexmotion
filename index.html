@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApexMotion // Флагманская витрина мировых веб-анимаций & FX</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#00f5d4',
+              violet: '#7b2cbf',
+              pink: '#f72585',
+              blue: '#4361ee',
+              gold: '#ffb703',
+              dark: '#05050a',
+              card: '#0b0c16'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP 3 & ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Three.js r128 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- External Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="cyberpunk" class="ambient-bg micro-grid antialiased min-h-screen selection:bg-brand-cyan selection:text-black">
+
+  <!-- SVG Filters for Liquid Gooey FX -->
+  <svg style="visibility: hidden; position: absolute;" width="0" height="0">
+    <defs>
+      <filter id="gooey">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Interactive Custom Cursor with LERP -->
+  <div id="custom-cursor-dot" class="hidden md:block"></div>
+  <div id="custom-cursor-ring" class="hidden md:block"></div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/10 py-3.5 px-6 md:px-12 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-pink via-brand-violet to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-violet/40 group-hover:scale-105 transition-transform">
+          <i data-lucide="sparkles" class="w-5 h-5 text-black font-extrabold"></i>
+        </div>
+        <div>
+          <span class="font-black text-lg tracking-wider text-white">APEX<span class="text-brand-cyan">MOTION</span></span>
+          <span class="text-[10px] block text-gray-400 font-mono -mt-1 tracking-widest uppercase">Animation Showcase FX</span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-300">
+        <a href="#hero" class="hover:text-brand-cyan transition-colors">3D Сцена</a>
+        <a href="#showcase" class="hover:text-brand-cyan transition-colors">Витрина эффектов</a>
+        <a href="#interactive-lab" class="hover:text-brand-cyan transition-colors">Лаборатория FX</a>
+        <a href="#marquee-section" class="hover:text-brand-cyan transition-colors">Кинетика</a>
+        <a href="#tech-stack" class="hover:text-brand-cyan transition-colors">Движки</a>
+      </nav>
+
+      <!-- Theme Switcher & Actions -->
+      <div class="flex items-center gap-2.5">
+        <!-- Procedural Web Audio Synth Toggle -->
+        <button id="sound-toggle-btn" class="px-3 py-2 rounded-xl glass-panel text-brand-cyan hover:bg-white/10 transition-all text-xs font-mono flex items-center gap-1.5 border border-white/10" title="Включить / Выключить синтезатор Web Audio API">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+          <span class="sound-status hidden sm:inline">Звук: ON</span>
+        </button>
+
+        <!-- Theme Selector Dropdown / Buttons -->
+        <div class="hidden sm:flex items-center gap-1.5 p-1 rounded-xl glass-panel border border-white/10">
+          <button data-theme-btn="cyberpunk" class="w-6 h-6 rounded-lg bg-[#00f5d4] hover:scale-110 transition-transform" title="Cyberpunk Neon"></button>
+          <button data-theme-btn="apple-dark" class="w-6 h-6 rounded-lg bg-[#2997ff] hover:scale-110 transition-transform" title="Apple Dark Minimal"></button>
+          <button data-theme-btn="synthwave" class="w-6 h-6 rounded-lg bg-[#ff007f] hover:scale-110 transition-transform" title="Synthwave Sunset"></button>
+          <button data-theme-btn="matrix" class="w-6 h-6 rounded-lg bg-[#00ff66] hover:scale-110 transition-transform" title="Matrix Green"></button>
+          <button data-theme-btn="obsidian" class="w-6 h-6 rounded-lg bg-[#d4af37] hover:scale-110 transition-transform" title="Royal Obsidian"></button>
+        </div>
+
+        <!-- Confetti Trigger -->
+        <button id="confetti-btn" class="px-3.5 py-2 rounded-xl font-bold text-xs text-black bg-brand-cyan shadow-md hover:shadow-brand-cyan/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5">
+          <i data-lucide="party-popper" class="w-3.5 h-3.5"></i>
+          <span class="hidden md:inline">Confetti</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION WITH THREE.JS 3D PARTICLE GALAXY -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 overflow-hidden">
+    <!-- Three.js Canvas container -->
+    <div id="three-canvas-container" class="absolute inset-0 z-0"></div>
+    
+    <!-- Hero Overlay & Content -->
+    <div class="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel text-xs font-mono text-brand-cyan mb-6 border border-brand-cyan/30 animate-bounce">
+        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span>
+        Флагманская витрина передовых веб-анимаций v4.0
+      </div>
+
+      <!-- Вступительный блок-манифест от создателя -->
+      <div class="glass-panel max-w-3xl p-6 rounded-2xl border border-brand-cyan/25 mb-8 text-left bg-black/40 backdrop-blur-md shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-cyan/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex items-center gap-3 mb-3 border-b border-white/10 pb-3">
+          <div class="w-8 h-8 rounded-lg bg-brand-cyan/20 text-brand-cyan flex items-center justify-center font-black text-sm">
+            DS
+          </div>
+          <div>
+            <div class="text-sm font-bold text-white flex items-center gap-2">
+              Авторский манифест & Демонстрация
+              <span class="text-[10px] px-2 py-0.5 rounded bg-brand-pink/20 text-brand-pink border border-brand-pink/30 font-mono">Dmitry Starikov</span>
+            </div>
+            <div class="text-[11px] text-gray-400 font-mono">Создано Стариковым Дмитрием Сергеевичем для глубокого понимания технологий и живого кода</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-300 leading-relaxed mb-3">
+          Этот проект спроектирован как <strong class="text-white">исчерпывающая живая лаборатория веб-анимаций и математических симуляций</strong>. Здесь собраны все ключевые мировые механики: от WebGL-шейдеров и гравитационных колодцев до эластичной физики Гука и кинетической типографики.
+        </p>
+        <p class="text-xs text-gray-400 leading-relaxed">
+          💡 <strong class="text-brand-cyan">Как код выглядит наяву:</strong> каждая технология не просто анимируется, а содержит вскрытую математическую модель и исходный код. Нажав «Код наяву», вы можете протестировать, отредактировать параметры и увидеть исполнение алгоритма прямо в реальном времени.
+        </p>
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white leading-none mb-6">
+        БУДУЩЕЕ ВЕБ-<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-pink">АНИМАЦИЙ</span>
+      </h1>
+
+      <p class="max-w-2xl text-gray-300 text-base md:text-lg mb-10 font-normal leading-relaxed">
+        Синтез <span class="text-brand-cyan font-semibold">Three.js WebGL</span>, <span class="text-brand-pink font-semibold">GSAP 3</span>, <span class="text-indigo-400 font-semibold">Canvas 2D Physics</span>, <span class="text-emerald-400 font-semibold">CSS3 Shaders</span> и <span class="text-amber-400 font-semibold">Web Audio API</span> в одном высокопроизводительном интерфейсе.
+      </p>
+
+      <!-- Action buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="#showcase" class="px-8 py-4 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-black font-extrabold text-sm shadow-xl shadow-brand-cyan/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+          <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+          Исследовать эффекты
+        </a>
+        <button id="toggle-3d-mode" class="px-7 py-4 rounded-xl glass-panel text-white font-semibold text-sm border border-white/10 hover:border-brand-pink/50 hover:bg-brand-pink/10 transition-all flex items-center gap-2">
+          <i data-lucide="orbit" class="w-4 h-4 text-brand-pink"></i>
+          Режим 3D: <span id="mode-text" class="text-brand-cyan">Сфера Фибоначчи</span>
+        </button>
+      </div>
+
+      <!-- Live metrics strip -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 w-full max-w-4xl">
+        <div class="glass-panel p-4 rounded-2xl text-center border border-white/5">
+          <div class="text-2xl md:text-3xl font-black text-brand-cyan font-mono" id="fps-counter">60</div>
+          <div class="text-xs text-gray-400 uppercase tracking-widest mt-1">FPS Render</div>
+        </div>
+        <div class="glass-panel p-4 rounded-2xl text-center border border-white/5">
+          <div class="text-2xl md:text-3xl font-black text-brand-pink font-mono">2,200+</div>
+          <div class="text-xs text-gray-400 uppercase tracking-widest mt-1">3D Частиц</div>
+        </div>
+        <div class="glass-panel p-4 rounded-2xl text-center border border-white/5">
+          <div class="text-2xl md:text-3xl font-black text-brand-blue font-mono">16+</div>
+          <div class="text-xs text-gray-400 uppercase tracking-widest mt-1">Флагманских FX</div>
+        </div>
+        <div class="glass-panel p-4 rounded-2xl text-center border border-white/5">
+          <div class="text-2xl md:text-3xl font-black text-brand-gold font-mono">0.0ms</div>
+          <div class="text-xs text-gray-400 uppercase tracking-widest mt-1">Zero Audio Lag</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll down indicator -->
+    <a href="#showcase" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-500 hover:text-brand-cyan transition-colors z-10">
+      <span class="text-[11px] font-mono tracking-widest uppercase mb-1">Скроллить вниз</span>
+      <i data-lucide="chevron-down" class="w-5 h-5 animate-bounce"></i>
+    </a>
+  </section>
+
+  <!-- SHOWCASE CATALOG SECTION WITH SEARCH & CATEGORY FILTERS -->
+  <section id="showcase" class="py-24 px-6 md:px-12 max-w-7xl mx-auto relative z-10">
+    <div class="text-center mb-12">
+      <span class="text-brand-cyan text-xs font-mono tracking-widest uppercase">Интерактивный каталог</span>
+      <h2 class="text-3xl md:text-5xl font-black text-white tracking-tight mt-1 mb-4">
+        АРСЕНАЛ <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-cyan">ТОПОВЫХ АНИМАЦИЙ</span>
+      </h2>
+      <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
+        Полный спектр анимационных решений мировой веб-индустрии: кликайте, наводите мышь, тестируйте физику и открывайте чистый готовый код каждого эффекта.
+      </p>
+
+      <!-- Category Filter Pills & Search Input -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 mt-8 max-w-4xl mx-auto">
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <button data-filter="all" class="px-4 py-2 rounded-xl text-xs font-semibold bg-brand-cyan text-black border border-brand-cyan transition-all">Все эффекты</button>
+          <button data-filter="3d" class="px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-gray-300 hover:text-white transition-all">3D / WebGL</button>
+          <button data-filter="physics" class="px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-gray-300 hover:text-white transition-all">Физика Canvas</button>
+          <button data-filter="gsap" class="px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-gray-300 hover:text-white transition-all">GSAP Motion</button>
+          <button data-filter="css" class="px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-gray-300 hover:text-white transition-all">CSS & Shaders</button>
+          <button data-filter="ui" class="px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-gray-300 hover:text-white transition-all">UI & Звук</button>
+        </div>
+
+        <div class="relative w-full md:w-64">
+          <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input id="search-input" type="text" placeholder="Быстрый поиск FX..." class="w-full pl-9 pr-4 py-2 rounded-xl glass-panel text-xs text-white placeholder-gray-500 border border-white/10 focus:border-brand-cyan focus:outline-none transition-colors">
+        </div>
+      </div>
+    </div>
+
+    <!-- CARDS GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="cards-grid">
+
+      <!-- CARD 1: 3D Crystal Polyhedron with Inertia (WebGL) -->
+      <div data-card-category="3d" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              Three.js WebGL
+            </span>
+            <button data-code-key="three-polyhedron" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition-colors">3D Кристалл & Инерция мыши</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Парящий икосаэдр с внутренним светящимся ядром, физической левитацией и сглаженным трекингом курсора (LERP).
+          </p>
+        </div>
+
+        <div class="h-44 rounded-xl bg-black/40 border border-white/5 relative overflow-hidden flex items-center justify-center">
+          <canvas id="crystal-canvas" class="w-full h-full"></canvas>
+          <div class="absolute bottom-2 right-2 text-[10px] font-mono text-gray-500 pointer-events-none">Двигайте мышь</div>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>Three.MeshStandardMaterial</span>
+          <span class="text-brand-cyan">WebGL 60fps</span>
+        </div>
+      </div>
+
+      <!-- CARD 2: Gravity Well / Black Hole (Physics Canvas 2D) -->
+      <div data-card-category="physics" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              Canvas 2D Physics
+            </span>
+            <button data-code-key="blackhole-gravity" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Гравитационный колодец (Black Hole)</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Физика притяжения Ньютона с орбитальным разгоном частиц и импульсным отталкиванием при зажатии мыши/тапа.
+          </p>
+        </div>
+
+        <div class="h-44 rounded-xl bg-black/40 border border-white/5 relative overflow-hidden">
+          <canvas id="gravity-canvas" class="w-full h-full cursor-crosshair"></canvas>
+          <div class="absolute bottom-2 left-2 text-[10px] font-mono text-gray-400 pointer-events-none bg-black/60 px-2 py-0.5 rounded">Зажмите клик для отталкивания</div>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>F = G*(m1*m2)/r²</span>
+          <span class="text-purple-400">Orbital Mechanics</span>
+        </div>
+      </div>
+
+      <!-- CARD 3: Elastic Spring Mesh / Cloth Simulation -->
+      <div data-card-category="physics" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-pink-500/20 text-pink-300 border border-pink-500/30">
+              Hooke's Spring Law
+            </span>
+            <button data-code-key="elastic-mesh" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-pink transition-colors">Эластичная сетка (Spring Mesh)</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Симуляция ткани и пружинных узлов с демпфированным гармоническим колебанием при взаимодействии с курсором.
+          </p>
+        </div>
+
+        <div class="h-44 rounded-xl bg-black/40 border border-white/5 relative overflow-hidden">
+          <canvas id="elastic-canvas" class="w-full h-full"></canvas>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>Damped Harmonic Oscillator</span>
+          <span class="text-brand-pink">Spring Mesh</span>
+        </div>
+      </div>
+
+      <!-- CARD 4: 3D Parallax Tilt with Holographic Glare (CSS & Shaders) -->
+      <div data-card-category="css" class="tilt-card-container glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div class="tilt-card-inner h-full flex flex-col justify-between">
+          <div class="tilt-card-glare"></div>
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                CSS 3D & Hologram
+              </span>
+              <button data-code-key="tilt-glare" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+                <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+              </button>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition-colors">3D Tilt & Голографический блик</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-4">
+              Панорамный наклон карточки с динамическим расчетом угла и голографическим световым бликом (angle-based glare).
+            </p>
+          </div>
+
+          <div class="h-32 rounded-xl bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-black/60 border border-white/10 p-4 flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-pink to-brand-violet flex items-center justify-center shadow-lg shadow-purple-500/40 mb-2">
+              <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+            </div>
+            <div class="text-xs font-bold text-white">3D Инерционный слой</div>
+          </div>
+
+          <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+            <span>perspective: 1200px</span>
+            <span class="text-brand-cyan">Active 3D</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 5: Hacker Text Scramble (GSAP / JS) -->
+      <div data-card-category="gsap" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              Kinetic Typography
+            </span>
+            <button data-code-key="hacker-scramble" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Кибер-декодер текста (Scramble)</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Эффект посимвольного дешифрования глифов в стиле Ghost in the Shell и Matrix с динамическим проявлением.
+          </p>
+        </div>
+
+        <div class="h-44 flex flex-col items-center justify-center bg-black/40 rounded-xl border border-white/5 p-4 text-center">
+          <div id="scramble-text" class="text-base sm:text-lg font-black font-mono text-emerald-400 tracking-wider">
+            QUANTUM_CYBER_MATRIX
+          </div>
+          <button id="re-scramble-btn" class="mt-4 px-3.5 py-2 rounded-lg bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-xs font-mono border border-emerald-500/30 transition-all flex items-center gap-1.5">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Декодировать фразу
+          </button>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>Glyph Substitution Matrix</span>
+          <span class="text-emerald-400">Ready</span>
+        </div>
+      </div>
+
+      <!-- CARD 6: Magnetic Button with Spring Return (GSAP) -->
+      <div data-card-category="gsap" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              GSAP Elastic Physics
+            </span>
+            <button data-code-key="magnetic-button" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-cyan transition-colors">Магнитная кнопка (Magnetic Pull)</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Интерактивное притягивание кнопки к курсору с последующим пружинным затухающим возвратом (elastic.out).
+          </p>
+        </div>
+
+        <div class="h-44 flex items-center justify-center bg-black/30 rounded-xl border border-white/5 relative">
+          <button id="magnetic-btn" class="px-6 py-3.5 rounded-full bg-gradient-to-r from-brand-cyan to-brand-blue text-black font-black text-xs uppercase tracking-wider shadow-xl shadow-brand-cyan/20">
+            Притяни меня
+          </button>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>ease: elastic.out(1.2, 0.4)</span>
+          <span class="text-brand-cyan">Hover Ready</span>
+        </div>
+      </div>
+
+      <!-- CARD 7: SVG Path Morphing (GSAP & Vector) -->
+      <div data-card-category="gsap" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Vector Morphing
+            </span>
+            <button data-code-key="svg-morph" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">SVG Path Morphing</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Плавная трансформация векторных кривых Безье между фигурами звезды, щита, круга и шестигранника.
+          </p>
+        </div>
+
+        <div class="h-44 flex flex-col items-center justify-center bg-black/40 rounded-xl border border-white/5 p-4">
+          <svg class="w-20 h-20" viewBox="0 0 100 100">
+            <path id="morph-path" d="M 50 5 L 63 35 L 95 38 L 71 60 L 78 92 L 50 75 L 22 92 L 29 60 L 5 38 L 37 35 Z" fill="#ffb703" />
+          </svg>
+          <div class="flex items-center gap-3 mt-3">
+            <span id="morph-shape-label" class="text-xs font-mono text-gray-300">Звезда (Star)</span>
+            <button id="morph-btn" class="px-3 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-xs font-mono border border-amber-500/30">Сменить форму</button>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>Bezier Curve Interpolation</span>
+          <span class="text-amber-400">Elastic Morph</span>
+        </div>
+      </div>
+
+      <!-- CARD 8: Liquid SVG Gooey Metaballs (CSS Filter) -->
+      <div data-card-category="css" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-pink-500/20 text-pink-300 border border-pink-500/30">
+              feColorMatrix Filter
+            </span>
+            <button data-code-key="liquid-gooey" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-pink transition-colors">Жидкий морфинг (Gooey Metaballs)</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Органическое слияние элементов через матричный SVG-фильтр для эффекта жидкой ртути и капель лавовой лампы.
+          </p>
+        </div>
+
+        <div class="h-44 flex items-center justify-center bg-black/40 rounded-xl border border-white/5 overflow-hidden">
+          <div class="gooey-filter relative w-36 h-24 flex items-center justify-center">
+            <div class="w-12 h-12 bg-brand-pink rounded-full absolute left-4 animate-pulse"></div>
+            <div id="goo-follower" class="w-12 h-12 bg-brand-cyan rounded-full absolute right-4 transition-all duration-500"></div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <button id="trigger-goo" class="text-xs text-brand-pink underline hover:text-white font-mono">Слить капли</button>
+          <span class="text-pink-400">feGaussianBlur</span>
+        </div>
+      </div>
+
+      <!-- CARD 9: Conic Gradient Neon Trail (100% GPU) -->
+      <div data-card-category="css" class="conic-border-card p-1 group flex flex-col justify-between">
+        <div class="glass-panel rounded-2xl p-6 h-full flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                100% GPU Shader
+              </span>
+              <button data-code-key="conic-trail" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+                <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+              </button>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Хроматический неон-бордер</h3>
+            <p class="text-xs text-gray-400 leading-relaxed mb-4">
+              Вращающийся конический световой шлейф с нулевой нагрузкой на CPU (аппаратное ускорение видеокарты).
+            </p>
+          </div>
+
+          <div class="h-32 rounded-xl bg-gradient-to-r from-purple-900/30 via-indigo-900/30 to-black/60 flex items-center justify-center border border-white/5">
+            <span class="text-xs font-mono text-white/90 animate-pulse flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-cyan animate-ping"></span>
+              Ultra-Fluid Conic Trail
+            </span>
+          </div>
+
+          <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+            <span>Hardware Accelerated</span>
+            <span class="text-purple-400">Zero CPU Cost</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 10: Multi-harmonic Soundwave Visualizer (Canvas 2D) -->
+      <div data-card-category="physics" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30">
+              Interference Waves
+            </span>
+            <button data-code-key="soundwave-eq" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-brand-blue transition-colors">Волновой радар & Интерференция</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Наложение трех независимых синусоидальных гармоник с фазовым сдвигом и спектральным свечением.
+          </p>
+        </div>
+
+        <div class="h-44 bg-black/50 rounded-xl border border-white/5 overflow-hidden relative">
+          <canvas id="soundwave-canvas" class="w-full h-full"></canvas>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>f(x) = Σ sin(ωt + φ)</span>
+          <span class="text-brand-blue">Dynamic 60fps</span>
+        </div>
+      </div>
+
+      <!-- CARD 11: Shimmer Skeleton & Pulsing Radar (CSS / UI) -->
+      <div data-card-category="ui" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              Micro-UI & Shimmer
+            </span>
+            <button data-code-key="web-audio-synth" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Шиммер & Неоновый радар</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Анимированный скелетон загрузки с мягким световым градиентом и сонарный радар с фазовыми кольцами.
+          </p>
+        </div>
+
+        <div class="h-44 bg-black/40 rounded-xl border border-white/5 p-4 flex items-center justify-around relative overflow-hidden">
+          <!-- Radar -->
+          <div class="relative w-24 h-24 flex items-center justify-center">
+            <div class="radar-ring w-20 h-20"></div>
+            <div class="radar-ring w-20 h-20"></div>
+            <div class="radar-ring w-20 h-20"></div>
+            <div class="w-3 h-3 rounded-full bg-brand-cyan shadow-lg shadow-brand-cyan"></div>
+          </div>
+          <!-- Shimmer items -->
+          <div class="flex flex-col gap-2.5 w-1/2">
+            <div class="shimmer-box h-3.5 w-full rounded-md"></div>
+            <div class="shimmer-box h-3 w-3/4 rounded-md"></div>
+            <div class="shimmer-box h-3 w-1/2 rounded-md"></div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>Pulse Rings + Shimmer</span>
+          <span class="text-emerald-400">Pure CSS</span>
+        </div>
+      </div>
+
+      <!-- CARD 12: Micro-interactions: Ripple & Morphing Toggles -->
+      <div data-card-category="ui" class="glass-panel rounded-2xl p-6 glass-card-hover relative overflow-hidden group border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30">
+              Tactile Micro-FX
+            </span>
+            <button data-code-key="web-audio-synth" class="text-xs text-gray-400 hover:text-brand-cyan flex items-center gap-1 font-mono">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Код эффекта
+            </button>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">Тактильные кнопки & Ripple</h3>
+          <p class="text-xs text-gray-400 leading-relaxed mb-4">
+            Волна клика (Ripple effect), морфинг переключателя и процедурный синтез щелчка через Web Audio API.
+          </p>
+        </div>
+
+        <div class="h-44 bg-black/40 rounded-xl border border-white/5 p-4 flex flex-col items-center justify-center gap-4">
+          <button class="ripple-btn px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-violet to-brand-pink text-white font-bold text-xs shadow-lg shadow-brand-violet/30 hover:scale-105 active:scale-95 transition-all">
+            Кликни для Ripple & Звука
+          </button>
+          
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-mono text-gray-400">Morphing Toggle:</span>
+            <div id="demo-morph-toggle" class="morph-toggle">
+              <div class="morph-thumb"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+          <span>Web Audio API Integrated</span>
+          <span class="text-amber-400">Tactile UI</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INFINITE KINETIC MARQUEE SECTION -->
+  <section id="marquee-section" class="py-16 bg-black/60 border-y border-white/5 overflow-hidden relative z-10">
+    <div class="mb-4 text-center">
+      <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Двунаправленная кинетическая бегущая строка</span>
+    </div>
+
+    <!-- Forward Track -->
+    <div class="marquee-track marquee-forward text-2xl md:text-4xl font-black text-white/20 hover:text-white/40 transition-colors select-none py-2">
+      <span>THREE.JS WEBGL</span> • <span>GSAP 3 SCROLLTRIGGER</span> • <span>CANVAS 2D PHYSICS</span> • <span>WEB AUDIO API SYNTH</span> • <span>SPRING MESH</span> • <span>CONIC SHADER</span> • <span>THREE.JS WEBGL</span> • <span>GSAP 3 SCROLLTRIGGER</span> • <span>CANVAS 2D PHYSICS</span> • <span>WEB AUDIO API SYNTH</span> • <span>SPRING MESH</span> • <span>CONIC SHADER</span>
+    </div>
+
+    <!-- Reverse Track -->
+    <div class="marquee-track marquee-reverse text-2xl md:text-4xl font-black text-brand-cyan/20 hover:text-brand-cyan/40 transition-colors select-none py-2">
+      <span>HIGH PERFORMANCE 120 FPS</span> • <span>HACKER TEXT SCRAMBLE</span> • <span>SVG PATH MORPHING</span> • <span>BLACK HOLE GRAVITY</span> • <span>3D PARALLAX GLARE</span> • <span>HIGH PERFORMANCE 120 FPS</span> • <span>HACKER TEXT SCRAMBLE</span> • <span>SVG PATH MORPHING</span> • <span>BLACK HOLE GRAVITY</span> • <span>3D PARALLAX GLARE</span>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE ANIMATION LAB (CONTROLS & PHYSICS) -->
+  <section id="interactive-lab" class="py-24 px-6 md:px-12 bg-black/40 border-b border-white/5 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <span class="text-brand-cyan text-xs font-mono tracking-widest uppercase">Интерактивная среда</span>
+          <h2 class="text-3xl md:text-5xl font-black text-white mt-1">ЛАБОРАТОРИЯ <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-blue">ФИЗИКИ И ЭФФЕКТОВ</span></h2>
+        </div>
+        <p class="text-gray-400 max-w-md text-sm mt-4 md:mt-0">
+          Управляйте параметрами анимации на лету: меняйте скорость, радиус связей, количество активных частиц и вызывайте взрывные импульсы.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Control Panel -->
+        <div class="glass-panel rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+              <i data-lucide="sliders" class="w-5 h-5 text-brand-cyan"></i>
+              Параметры генератора
+            </h3>
+
+            <!-- Slider 1: Particle Count -->
+            <div class="mb-5">
+              <div class="flex justify-between text-xs font-mono mb-2">
+                <span class="text-gray-400">Число частиц</span>
+                <span id="val-particles" class="text-brand-cyan">140</span>
+              </div>
+              <input type="range" id="slider-particles" min="20" max="400" value="140" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-2 cursor-pointer">
+            </div>
+
+            <!-- Slider 2: Speed -->
+            <div class="mb-5">
+              <div class="flex justify-between text-xs font-mono mb-2">
+                <span class="text-gray-400">Скорость потока</span>
+                <span id="val-speed" class="text-brand-cyan">1.5x</span>
+              </div>
+              <input type="range" id="slider-speed" min="1" max="50" value="15" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-2 cursor-pointer">
+            </div>
+
+            <!-- Slider 3: Connect Distance -->
+            <div class="mb-5">
+              <div class="flex justify-between text-xs font-mono mb-2">
+                <span class="text-gray-400">Радиус связей</span>
+                <span id="val-dist" class="text-brand-cyan">100px</span>
+              </div>
+              <input type="range" id="slider-dist" min="40" max="200" value="100" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-2 cursor-pointer">
+            </div>
+
+            <!-- Effect Presets -->
+            <div class="mt-6">
+              <span class="text-xs text-gray-400 block mb-2 font-mono">Пресеты цветовой схемы:</span>
+              <div class="grid grid-cols-3 gap-2">
+                <button class="preset-btn px-3 py-2 rounded-xl text-xs font-semibold bg-brand-cyan/20 border border-brand-cyan text-brand-cyan" data-color="cyan">Cyber Cyan</button>
+                <button class="preset-btn px-3 py-2 rounded-xl text-xs font-semibold bg-white/5 border border-white/10 text-gray-300 hover:text-white" data-color="neon-pink">Neon Pink</button>
+                <button class="preset-btn px-3 py-2 rounded-xl text-xs font-semibold bg-white/5 border border-white/10 text-gray-300 hover:text-white" data-color="matrix">Matrix Green</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+            <button id="reset-lab-btn" class="text-xs text-gray-400 hover:text-white flex items-center gap-1 font-mono">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Сбросить настройки
+            </button>
+            <button id="blast-lab-btn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-pink to-brand-violet text-white font-bold text-xs shadow-lg shadow-brand-pink/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5">
+              <i data-lucide="bomb" class="w-3.5 h-3.5"></i> Взрыв импульса
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Canvas Playground -->
+        <div class="lg:col-span-2 glass-panel rounded-2xl border border-white/10 overflow-hidden relative h-[420px] flex items-center justify-center">
+          <canvas id="interactive-canvas" class="w-full h-full"></canvas>
+          <div class="absolute bottom-4 left-4 pointer-events-none text-[11px] font-mono text-gray-400 bg-black/60 px-3 py-1.5 rounded-lg border border-white/5 backdrop-blur-sm">
+            💡 Наведите мышь или коснитесь экрана для притяжения частиц, кликните для отталкивания
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GSAP SCROLLTRIGGER STAGGER TIMELINE -->
+  <section class="py-24 px-6 md:px-12 max-w-7xl mx-auto relative z-10">
+    <div class="text-center mb-16">
+      <span class="text-brand-pink text-xs font-mono tracking-widest uppercase">GSAP 3 ScrollTrigger</span>
+      <h2 class="text-3xl md:text-5xl font-black text-white mt-1">КИНЕМАТОГРАФИЧНЫЙ СКРОЛЛ</h2>
+      <p class="text-gray-400 max-w-xl mx-auto text-sm mt-3">
+        Элементы плавно возникают с задержкой (stagger), масштабированием и изменением прозрачности при прокрутке.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6" id="stagger-cards-container">
+      <div class="gsap-reveal-card glass-panel p-6 rounded-2xl border border-white/5 flex flex-col justify-between">
+        <div class="w-12 h-12 rounded-xl bg-brand-cyan/20 text-brand-cyan flex items-center justify-center mb-6">
+          <i data-lucide="cpu" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-2">GPU Acceleration</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Принудительный перенос отрисовки на графический чип (GPU) через CSS transform3d и will-change.
+          </p>
+        </div>
+        <div class="mt-6 text-[10px] font-mono text-brand-cyan">transform: translateZ(0)</div>
+      </div>
+
+      <div class="gsap-reveal-card glass-panel p-6 rounded-2xl border border-white/5 flex flex-col justify-between">
+        <div class="w-12 h-12 rounded-xl bg-brand-pink/20 text-brand-pink flex items-center justify-center mb-6">
+          <i data-lucide="gauge" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-2">Non-blocking 120 FPS</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Синхронизация через requestAnimationFrame и IntersectionObserver исключает лишний нагрев CPU.
+          </p>
+        </div>
+        <div class="mt-6 text-[10px] font-mono text-brand-pink">requestAnimationFrame()</div>
+      </div>
+
+      <div class="gsap-reveal-card glass-panel p-6 rounded-2xl border border-white/5 flex flex-col justify-between">
+        <div class="w-12 h-12 rounded-xl bg-brand-blue/20 text-brand-blue flex items-center justify-center mb-6">
+          <i data-lucide="code-2" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-2">GSAP Easing Math</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Продвинутые кривые Безье (power4.out, elastic.out, bounce) для органического физического отклика.
+          </p>
+        </div>
+        <div class="mt-6 text-[10px] font-mono text-brand-blue">cubic-bezier & springs</div>
+      </div>
+
+      <div class="gsap-reveal-card glass-panel p-6 rounded-2xl border border-white/5 flex flex-col justify-between">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6">
+          <i data-lucide="feather" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-2">Web Audio Synthesizer</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Чистый встроенный процедурный синтез кликов и наведений без внешних тяжелых mp3 файлов.
+          </p>
+        </div>
+        <div class="mt-6 text-[10px] font-mono text-emerald-400">AudioContext API</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK & ENGINE SUMMARY -->
+  <section id="tech-stack" class="py-20 px-6 md:px-12 bg-black/60 border-t border-white/5 relative z-10">
+    <div class="max-w-5xl mx-auto text-center">
+      <h3 class="text-2xl md:text-3xl font-black text-white mb-8">Используемые флагманские технологии</h3>
+      
+      <div class="flex flex-wrap items-center justify-center gap-6">
+        <div class="px-5 py-3 rounded-xl glass-panel border border-white/10 flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-cyan-400"></div>
+          <span class="text-sm font-bold text-white">Three.js r128</span>
+          <span class="text-xs text-gray-500 font-mono">3D WebGL</span>
+        </div>
+        <div class="px-5 py-3 rounded-xl glass-panel border border-white/10 flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+          <span class="text-sm font-bold text-white">GSAP 3.12</span>
+          <span class="text-xs text-gray-500 font-mono">Tween & Timeline</span>
+        </div>
+        <div class="px-5 py-3 rounded-xl glass-panel border border-white/10 flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-pink-400"></div>
+          <span class="text-sm font-bold text-white">Tailwind CSS</span>
+          <span class="text-xs text-gray-500 font-mono">Modern UI</span>
+        </div>
+        <div class="px-5 py-3 rounded-xl glass-panel border border-white/10 flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-blue-400"></div>
+          <span class="text-sm font-bold text-white">HTML5 Canvas 2D</span>
+          <span class="text-xs text-gray-500 font-mono">Physics Core</span>
+        </div>
+        <div class="px-5 py-3 rounded-xl glass-panel border border-white/10 flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+          <span class="text-sm font-bold text-white">Web Audio API</span>
+          <span class="text-xs text-gray-500 font-mono">Procedural Synth</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-12 px-6 border-t border-white/5 text-center text-xs font-mono text-gray-500 relative z-10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-brand-cyan"></span>
+        <span>ApexMotion // Собрано в Enterprise Core</span>
+      </div>
+      <div>
+        <span>Дмитрий Сергеевич Стариков © 2026</span>
+      </div>
+      <div class="flex gap-4">
+        <a href="#hero" class="hover:text-brand-cyan transition-colors">Наверх ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CODE MODAL DIALOG -->
+  <div id="code-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-2xl rounded-2xl border border-white/15 p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
+      <!-- Header -->
+      <div class="flex items-start justify-between pb-4 border-b border-white/10">
+        <div>
+          <span id="modal-category" class="text-[10px] font-mono uppercase tracking-widest text-brand-cyan block">Категория</span>
+          <h3 id="modal-title" class="text-lg font-bold text-white mt-1">Название эффекта</h3>
+        </div>
+        <button id="modal-close-btn" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Description -->
+      <p id="modal-desc" class="text-xs text-gray-400 my-4 leading-relaxed"></p>
+
+      <!-- Code Container -->
+      <div class="relative flex-1 overflow-hidden rounded-xl bg-black/60 border border-white/10 p-4 font-mono text-xs text-emerald-400 overflow-y-auto">
+        <pre><code id="modal-code"></code></pre>
+      </div>
+
+      <!-- Footer / Copy Action -->
+      <div class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between">
+        <span id="modal-copy-feedback" class="text-xs font-mono text-brand-cyan hidden flex items-center gap-1.5">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i> Скопировано в буфер обмена!
+        </span>
+        <div class="ml-auto">
+          <button id="modal-copy-btn" class="px-5 py-2.5 rounded-xl bg-brand-cyan text-black font-extrabold text-xs hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            Скопировать код
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATALOG 1000 TECHNOLOGIES & LIVE CODE RUNNER SECTION -->
+  <section id="catalog-1000" class="py-24 px-6 md:px-12 max-w-7xl mx-auto relative z-10 border-t border-white/10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-pink/20 text-brand-pink text-xs font-mono mb-3 border border-brand-pink/30">
+          <i data-lucide="database" class="w-3.5 h-3.5"></i>
+          Глобальный реестр веб-технологий
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black text-white">АРСЕНАЛ <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink via-brand-violet to-brand-cyan">1000 ТЕХНОЛОГИЙ & ЭФФЕКТОВ</span></h2>
+        <p class="text-gray-400 text-sm max-w-2xl mt-2">
+          Полная энциклопедия мировых алгоритмов визуализации, физики, WebGL, GLSL, CSS3 и Web Audio. С возможностью запустить и увидеть исполнение кода наяву.
+        </p>
+      </div>
+
+      <div id="tech-count-badge" class="mt-4 md:mt-0 px-4 py-2 rounded-xl glass-panel text-brand-cyan font-mono text-xs border border-brand-cyan/30">
+        Загрузка технологий...
+      </div>
+    </div>
+
+    <!-- Search & Category Filters -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="md:col-span-2 relative">
+        <input type="text" id="tech-search" placeholder="Поиск по 1000 технологиям, формулам, движкам..." class="w-full px-4 py-3.5 rounded-xl bg-black/60 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-brand-cyan font-mono">
+      </div>
+      <div>
+        <select id="tech-cat-filter" class="w-full px-4 py-3.5 rounded-xl bg-black/60 border border-white/10 text-gray-300 text-sm focus:outline-none focus:border-brand-cyan font-mono cursor-pointer">
+          <option value="all">Все категории (1000 шт)</option>
+          <option value="3D & WebGL (Three.js / GLSL)">3D & WebGL (Three.js / GLSL)</option>
+          <option value="Физика & Симуляции (Canvas 2D)">Физика & Симуляции (Canvas 2D)</option>
+          <option value="CSS3 Hardware Acceleration (GPU)">CSS3 Hardware (GPU)</option>
+          <option value="GSAP 3 & Timeline Orchestration">GSAP 3 & Motion</option>
+          <option value="Шейдеры & Процедурный шум">Шейдеры & Процедурный шум</option>
+          <option value="SVG & Векторный морфинг">SVG & Векторный морфинг</option>
+          <option value="Кинетическая типографика">Кинетическая типографика</option>
+          <option value="Микро-взаимодействия & UI">Микро-взаимодействия & UI</option>
+          <option value="Web Audio API & Процедурный звук">Web Audio API & Процедурный звук</option>
+          <option value="Генеративное искусство & Фракталы">Генеративное искусство & Фракталы</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Dynamic 1000 Grid -->
+    <div id="tech-1000-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Populated via catalog_1000.js -->
+    </div>
+  </section>
+
+  <!-- LIVE RUNTIME RUNNER MODAL ("КОД НАЯВУ") -->
+  <div id="live-executor-modal" class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-4 backdrop-blur-md">
+    <div class="glass-panel w-full max-w-4xl rounded-2xl border border-brand-cyan/30 p-6 shadow-2xl relative flex flex-col max-h-[90vh]">
+      <!-- Header -->
+      <div class="flex items-start justify-between pb-4 border-b border-white/10">
+        <div>
+          <span id="live-modal-badge" class="text-[10px] font-mono uppercase tracking-widest text-brand-pink block">Категория</span>
+          <h3 id="live-modal-title" class="text-xl font-bold text-white mt-1">Исполнение кода наяву</h3>
+        </div>
+        <button id="live-close-btn" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Live Split View: Code Editor + Live Canvas Output -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 my-4 flex-1 overflow-hidden">
+        <!-- Editor Column -->
+        <div class="flex flex-col h-full bg-black/60 rounded-xl border border-white/10 p-3">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/5 text-[11px] font-mono text-gray-400">
+            <span>Живой JavaScript / Canvas код:</span>
+            <span class="text-brand-cyan">Редактируемый</span>
+          </div>
+          <textarea id="live-code-area" class="w-full flex-1 bg-transparent text-emerald-400 font-mono text-xs focus:outline-none resize-none leading-relaxed p-1"></textarea>
+        </div>
+
+        <!-- Visual Canvas Column -->
+        <div class="flex flex-col h-full bg-black/80 rounded-xl border border-white/10 p-3">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/5 text-[11px] font-mono text-gray-400">
+            <span>Визуализация наяву (Viewport):</span>
+            <span class="text-brand-pink">60 FPS Hardware Render</span>
+          </div>
+          <div class="w-full flex-1 relative rounded-lg overflow-hidden bg-black/90 flex items-center justify-center">
+            <canvas id="live-runtime-canvas" class="w-full h-full"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Console Log & Action Bar -->
+      <div class="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div id="live-console-log" class="text-[11px] font-mono text-gray-400 truncate w-full sm:w-auto">
+          Готов к исполнению.
+        </div>
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+          <button id="live-run-btn" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-black font-extrabold text-xs shadow-lg shadow-brand-cyan/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            Перезапустить код наяву
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External Scripts -->
+  <script src="snippets.js"></script>
+  <script src="app.js"></script>
+  <script src="technologies_data.js"></script>
+  <script src="catalog_1000.js"></script>
+</body>
+</html>
