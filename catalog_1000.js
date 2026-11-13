@@ -100,45 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
     liveTitle.textContent = item.title;
     liveBadge.textContent = `${item.category} // ${item.engine}`;
     
-    // Генерируем реальный исполняемый код для демонстрации наяву
-    const executableCode = `// Исполняемый рендер наяву для: ${item.title}
-const ctx = canvas.getContext('2d');
-let t = 0;
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  t += 0.04;
-
-  // Визуализация математической волны / частиц
-  const count = 32;
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2 + t;
-    const r = 60 + Math.sin(t * 2 + i * 0.5) * 30;
-    const x = cx + Math.cos(angle) * r;
-    const y = cy + Math.sin(angle) * r;
-
-    ctx.beginPath();
-    ctx.arc(x, y, 4 + Math.sin(t + i) * 2, 0, Math.PI * 2);
-    ctx.fillStyle = i % 2 === 0 ? '#00f5d4' : '#f72585';
-    ctx.shadowColor = ctx.fillStyle;
-    ctx.shadowBlur = 12;
-    ctx.fill();
-
-    // Связующие лучи
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.stroke();
-  }
-
-  requestAnimationFrame(draw);
-}
-draw();
-log('Исполнение: 60 FPS, Canvas 2D WebGL Pipeline активен.');`;
+    // Подставляем реальный уникальный исполняемый код для конкретной технологии
+    const executableCode = item.code || `// Исполнение для: ${item.title}\nlog('Алгоритм готов к работе');`;
 
     liveCodeArea.value = executableCode;
     liveConsoleLog.textContent = `[${new Date().toLocaleTimeString()}] Код инициализирован: ${item.title} (Движок: ${item.engine}). Нажмите "Запустить наяву".`;
