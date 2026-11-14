@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://enterpc-core.github.io/apexmotion/sitemap.xml

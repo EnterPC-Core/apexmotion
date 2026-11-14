@@ -3,6 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO, Open Graph & Social Cards -->
+  <meta name="description" content="ApexMotion — флагманская витрина 998 мировых алгоритмов веб-анимаций, шейдеров WebGL, GSAP 3, физических симуляций и генераторов кода. Авторский проект Дмитрия Старикова.">
+  <meta name="keywords" content="ApexMotion, WebGL, Three.js, GSAP 3, Shaders, Raymarching, GLSL, Canvas 2D, CSS Animation, Kinetic Typography, UI Motion, Дмитрий Стариков">
+  <meta name="author" content="Дмитрий Сергеевич Стариков">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ApexMotion // Флагманская витрина веб-анимаций & FX">
+  <meta property="og:description" content="998 живых алгоритмов, песочница с исполнением кода, генераторы анимаций и интерактивная лаборатория.">
+  <meta property="og:url" content="https://enterpc-core.github.io/apexmotion/">
+  <meta property="og:image" content="https://enterpc-core.github.io/apexmotion/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ApexMotion // WebGL & Motion Architecture">
+  <meta name="twitter:description" content="Флагманская витрина веб-анимаций Дмитрия Старикова: Three.js, GSAP, Canvas 2D, GLSL Shaders.">
+
   <title>ApexMotion // Флагманская витрина мировых веб-анимаций & FX</title>
   
   <!-- Tailwind CSS CDN -->
@@ -82,16 +96,24 @@
       </a>
 
       <!-- Navigation Links -->
-      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-300 font-mono text-xs">
+      <nav class="hidden xl:flex items-center gap-5 text-sm font-medium text-gray-300 font-mono text-xs">
         <a href="#hero" class="hover:text-brand-cyan transition-colors">3D Сцена</a>
         <a href="#featured-showcase" class="hover:text-brand-cyan transition-colors">Флагманы</a>
+        <a href="#motion-generators" class="hover:text-brand-cyan transition-colors">Генераторы</a>
         <a href="#interactive-lab" class="hover:text-brand-cyan transition-colors">Лаборатория</a>
         <a href="#catalog-1000" class="hover:text-brand-cyan transition-colors">Каталог 998 FX</a>
-        <a href="#tech-stack" class="hover:text-brand-cyan transition-colors">Стек</a>
+        <a href="#user-workspace" class="hover:text-brand-cyan transition-colors">Workspace</a>
+        <a href="#ai-assistant" class="hover:text-brand-cyan transition-colors">AI Ассистент</a>
       </nav>
 
       <!-- Theme Switcher & Actions -->
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2">
+        <!-- Command Palette Trigger Button -->
+        <button id="cmd-palette-btn" class="px-2.5 py-2 rounded-xl glass-panel text-gray-300 hover:text-white hover:border-brand-cyan/50 transition-all text-xs font-mono flex items-center gap-1.5 border border-white/10" title="Командная палитра (Ctrl+K / Cmd+K)">
+          <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand-cyan"></i>
+          <span class="hidden sm:inline">Палитра</span>
+          <kbd class="hidden md:inline text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-gray-400 font-mono">⌘K</kbd>
+        </button>
         <!-- Favorites Navigation Button with Counter Badge -->
         <button id="favorites-nav-btn" class="px-3 py-2 rounded-xl glass-panel text-brand-cyan hover:bg-white/10 transition-all text-xs font-mono flex items-center gap-1.5 border border-white/10" title="Перейти в Избранное">
           <i data-lucide="bookmark" class="w-3.5 h-3.5 fill-current"></i>
@@ -407,6 +429,316 @@
   </section>
 
   <!-- SECTION 2: ИНТЕРАКТИВНАЯ ФИЗИЧЕСКАЯ ЛАБОРАТОРИЯ (INTERACTIVE LAB) -->
+    <!-- SECTION 1.5: MOTION GENERATORS SUITE -->
+  <section id="motion-generators" class="py-24 px-6 md:px-12 bg-black/60 border-t border-white/5 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/10 text-brand-cyan text-xs font-mono mb-3 border border-brand-cyan/25">
+            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+            Interactive Suite // Production Generators
+          </div>
+          <h2 class="text-3xl md:text-5xl font-black text-white">MOTION <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-pink">GENERATORS</span></h2>
+          <p class="text-gray-400 text-sm max-w-2xl mt-2 font-mono text-xs">
+            Четыре профессиональных интерактивных генератора: CSS Keyframes, Cubic Bezier, Particle FX и GLSL Fragment Shaders с мгновенным live preview и чистым кодом для копирования.
+          </p>
+        </div>
+      </div>
+
+      <!-- Generator Tabs -->
+      <div class="flex flex-wrap items-center gap-2 mb-8">
+        <button class="gen-tab-btn active px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all bg-brand-cyan text-black border border-brand-cyan shadow-lg shadow-brand-cyan/20 flex items-center gap-2" data-gen="css">
+          <i data-lucide="layers" class="w-4 h-4"></i> CSS Keyframes Generator
+        </button>
+        <button class="gen-tab-btn px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all glass-panel text-gray-300 hover:text-white border border-white/10 flex items-center gap-2" data-gen="bezier">
+          <i data-lucide="spline" class="w-4 h-4"></i> Cubic Bezier Editor
+        </button>
+        <button class="gen-tab-btn px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all glass-panel text-gray-300 hover:text-white border border-white/10 flex items-center gap-2" data-gen="particles">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Particle FX Studio
+        </button>
+        <button class="gen-tab-btn px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all glass-panel text-gray-300 hover:text-white border border-white/10 flex items-center gap-2" data-gen="shader">
+          <i data-lucide="code" class="w-4 h-4"></i> GLSL Shader Playground
+        </button>
+      </div>
+
+      <!-- TAB 1: CSS Animation Generator -->
+      <div id="gen-panel-css" class="gen-panel grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 glass-panel rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-brand-cyan"></i> Параметры Keyframe Анимации
+            </h3>
+
+            <!-- Animation Preset -->
+            <div class="mb-4">
+              <label class="block text-xs font-mono text-gray-400 mb-1.5">Тип трансформации (Keyframe)</label>
+              <select id="cssgen-type" class="w-full px-3 py-2.5 rounded-xl bg-black/70 border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-brand-cyan">
+                <option value="pulse-glow">Pulse & Glow (Пульсация со свечением)</option>
+                <option value="float-3d">Float & 3D Tilt (Левитация с наклоном)</option>
+                <option value="shimmer-sweep">Shimmer Sweep (Глянцевый блик)</option>
+                <option value="rubber-bounce">Rubber Elastic (Резиновый отскок)</option>
+                <option value="spin-orbit">Spin & Scale Orbit (Вращение по орбите)</option>
+              </select>
+            </div>
+
+            <!-- Duration -->
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-gray-400">Duration (Длительность)</span>
+                <span id="cssgen-dur-val" class="text-brand-cyan">1.8s</span>
+              </div>
+              <input type="range" id="cssgen-duration" min="0.3" max="5.0" step="0.1" value="1.8" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-1.5 cursor-pointer">
+            </div>
+
+            <!-- Timing Function -->
+            <div class="mb-4">
+              <label class="block text-xs font-mono text-gray-400 mb-1.5">Timing Function</label>
+              <select id="cssgen-timing" class="w-full px-3 py-2.5 rounded-xl bg-black/70 border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-brand-cyan">
+                <option value="ease-in-out">ease-in-out</option>
+                <option value="cubic-bezier(0.16, 1, 0.3, 1)">cubic-bezier(0.16, 1, 0.3, 1) [Smooth Elastic]</option>
+                <option value="cubic-bezier(0.34, 1.56, 0.64, 1)">cubic-bezier(0.34, 1.56, 0.64, 1) [Overshoot Spring]</option>
+                <option value="linear">linear</option>
+                <option value="ease">ease</option>
+              </select>
+            </div>
+
+            <!-- Iteration & Direction -->
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <label class="block text-xs font-mono text-gray-400 mb-1">Iteration Count</label>
+                <select id="cssgen-iteration" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-white font-mono text-xs">
+                  <option value="infinite">infinite</option>
+                  <option value="1">1 cycle</option>
+                  <option value="3">3 cycles</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-mono text-gray-400 mb-1">Direction</label>
+                <select id="cssgen-direction" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-white font-mono text-xs">
+                  <option value="alternate">alternate</option>
+                  <option value="normal">normal</option>
+                  <option value="reverse">reverse</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button id="cssgen-copy-btn" class="w-full py-3 rounded-xl bg-brand-cyan text-black font-extrabold text-xs flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-brand-cyan/20">
+            <i data-lucide="copy" class="w-4 h-4"></i> Скопировать готовый CSS
+          </button>
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <!-- Live Preview Box -->
+          <div class="h-64 generator-preview-box flex items-center justify-center relative">
+            <div class="absolute top-3 left-3 text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+              Live CSS Sandbox
+            </div>
+            <div id="cssgen-target" class="w-28 h-28 rounded-2xl bg-gradient-to-tr from-brand-cyan via-brand-blue to-brand-pink flex flex-col items-center justify-center shadow-2xl relative">
+              <i data-lucide="sparkles" class="w-8 h-8 text-black"></i>
+              <span class="text-[10px] font-black text-black mt-1 font-mono">APEX</span>
+            </div>
+          </div>
+
+          <!-- Code Box -->
+          <div class="glass-panel rounded-2xl p-4 border border-white/10 bg-black/80 font-mono text-xs text-emerald-400 overflow-x-auto">
+            <pre><code id="cssgen-code-output">/* CSS Animation Generated */</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Cubic Bezier Editor -->
+      <div id="gen-panel-bezier" class="gen-panel hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 glass-panel rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="spline" class="w-4 h-4 text-brand-cyan"></i> Интерактивная кривая Безье
+            </h3>
+            <p class="text-xs text-gray-400 mb-4 font-mono">
+              Перетаскивайте контрольные точки P1 (голубая) и P2 (розовая) прямо на холсте для создания авторской кривой ускорения.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 mb-4 text-xs font-mono">
+              <div class="p-2.5 rounded-xl bg-black/60 border border-brand-cyan/30">
+                <span class="text-brand-cyan block font-bold">P1 (X1, Y1):</span>
+                <span id="bezier-p1-label" class="text-gray-300">0.25, 0.10</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-black/60 border border-brand-pink/30">
+                <span class="text-brand-pink block font-bold">P2 (X2, Y2):</span>
+                <span id="bezier-p2-label" class="text-gray-300">0.25, 1.00</span>
+              </div>
+            </div>
+
+            <!-- Presets -->
+            <label class="block text-xs font-mono text-gray-400 mb-2">Библиотека профессиональных пресетов:</label>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <button class="bezier-preset-btn px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white font-mono text-xs border border-white/10 transition-colors" data-curve="0.25, 0.1, 0.25, 1.0">Ease</button>
+              <button class="bezier-preset-btn px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white font-mono text-xs border border-white/10 transition-colors" data-curve="0.16, 1.0, 0.3, 1.0">Framer / Linear</button>
+              <button class="bezier-preset-btn px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white font-mono text-xs border border-white/10 transition-colors" data-curve="0.34, 1.56, 0.64, 1.0">Bounce Out</button>
+              <button class="bezier-preset-btn px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white font-mono text-xs border border-white/10 transition-colors" data-curve="0.87, 0, 0.13, 1.0">Expo InOut</button>
+            </div>
+          </div>
+
+          <button id="bezier-copy-btn" class="w-full py-3 rounded-xl bg-brand-cyan text-black font-extrabold text-xs flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-brand-cyan/20">
+            <i data-lucide="copy" class="w-4 h-4"></i> Скопировать cubic-bezier(...)
+          </button>
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="generator-preview-box p-4 flex flex-col items-center justify-center">
+            <canvas id="bezier-canvas" width="400" height="260" class="w-full max-w-[420px] h-[260px]"></canvas>
+          </div>
+
+          <!-- Comparison Test Runner -->
+          <div class="glass-panel rounded-2xl p-4 border border-white/10 flex flex-col gap-3">
+            <div class="flex items-center justify-between text-xs font-mono text-gray-400">
+              <span>Сравнение кривых (1.5s):</span>
+              <button id="bezier-test-run" class="px-3 py-1 rounded bg-brand-cyan/20 border border-brand-cyan text-brand-cyan hover:bg-brand-cyan hover:text-black transition-all">
+                ▶ Запустить тест
+              </button>
+            </div>
+            <!-- Custom curve runner -->
+            <div class="relative w-full h-8 bg-black/60 rounded-lg overflow-hidden border border-white/5">
+              <div id="bezier-runner-custom" class="absolute top-1 left-1 bottom-1 w-14 bg-gradient-to-r from-brand-cyan to-brand-blue rounded flex items-center justify-center text-[10px] font-mono font-bold text-black">
+                Custom
+              </div>
+            </div>
+            <!-- Linear reference runner -->
+            <div class="relative w-full h-8 bg-black/60 rounded-lg overflow-hidden border border-white/5">
+              <div id="bezier-runner-linear" class="absolute top-1 left-1 bottom-1 w-14 bg-gray-600 rounded flex items-center justify-center text-[10px] font-mono font-bold text-white">
+                Linear
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Particle Generator -->
+      <div id="gen-panel-particles" class="gen-panel hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 glass-panel rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-4 h-4 text-brand-cyan"></i> Параметры Генератора Частиц
+            </h3>
+
+            <!-- Particle Count -->
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-gray-400">Количество частиц</span>
+                <span id="pgen-count-val" class="text-brand-cyan">120</span>
+              </div>
+              <input type="range" id="pgen-count" min="30" max="300" value="120" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-1.5 cursor-pointer">
+            </div>
+
+            <!-- Gravity -->
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-gray-400">Гравитация / Тяготение</span>
+                <span id="pgen-gravity-val" class="text-brand-cyan">0.05</span>
+              </div>
+              <input type="range" id="pgen-gravity" min="-0.2" max="0.3" step="0.01" value="0.05" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-1.5 cursor-pointer">
+            </div>
+
+            <!-- Speed -->
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-gray-400">Скорость разлёта (Velocity)</span>
+                <span id="pgen-speed-val" class="text-brand-cyan">3.0</span>
+              </div>
+              <input type="range" id="pgen-speed" min="0.5" max="8.0" step="0.5" value="3.0" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-1.5 cursor-pointer">
+            </div>
+
+            <!-- Particle Size -->
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono mb-1">
+                <span class="text-gray-400">Размер частиц</span>
+                <span id="pgen-size-val" class="text-brand-cyan">3.0px</span>
+              </div>
+              <input type="range" id="pgen-size" min="1" max="8" step="0.5" value="3.0" class="w-full accent-brand-cyan bg-gray-800 rounded-lg h-1.5 cursor-pointer">
+            </div>
+
+            <!-- Color Palette -->
+            <div class="mb-4">
+              <label class="block text-xs font-mono text-gray-400 mb-1.5">Цветовая палитра</label>
+              <select id="pgen-palette" class="w-full px-3 py-2.5 rounded-xl bg-black/70 border border-white/10 text-white font-mono text-xs">
+                <option value="cyan-blue">Cyber Cyan & Electric Blue</option>
+                <option value="neon-fire">Neon Pink & Amber Fire</option>
+                <option value="matrix-emerald">Quantum Matrix Emerald</option>
+                <option value="rainbow-glow">Rainbow Multi-Phase</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button id="pgen-burst-btn" class="flex-1 py-3 rounded-xl bg-brand-cyan text-black font-extrabold text-xs flex items-center justify-center gap-1.5 hover:scale-105 active:scale-95 transition-all">
+              <i data-lucide="zap" class="w-4 h-4"></i> Вспышка (Burst)
+            </button>
+            <button id="pgen-export-btn" class="px-4 py-3 rounded-xl glass-panel text-white font-mono text-xs border border-white/10 hover:border-brand-cyan/50 flex items-center gap-1.5">
+              <i data-lucide="download" class="w-4 h-4"></i> JS Экспорт
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="h-96 generator-preview-box relative">
+            <canvas id="pgen-canvas" class="w-full h-full cursor-crosshair"></canvas>
+            <div class="absolute bottom-3 left-3 text-[10px] font-mono text-gray-400 bg-black/70 px-2.5 py-1 rounded-md border border-white/10">
+              Кликните по холсту для взрыва частиц
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: GLSL Shader Playground -->
+      <div id="gen-panel-shader" class="gen-panel hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 glass-panel rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="code" class="w-4 h-4 text-brand-pink"></i> Фрагментный Шейдер GLSL
+              </h3>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-pink/20 text-brand-pink border border-brand-pink/30">WebGL 2.0 / 1.0</span>
+            </div>
+
+            <label class="block text-xs font-mono text-gray-400 mb-1.5">Выбор шейдерного алгоритма:</label>
+            <select id="shader-preset-select" class="w-full px-3 py-2.5 rounded-xl bg-black/70 border border-white/10 text-white font-mono text-xs mb-4">
+              <option value="plasma">Cosmic Plasma & Voronoi Waves</option>
+              <option value="sdf-ring">SDF Neon Glow Pulse Rings</option>
+              <option value="tunnel">Infinite Cyber Warp Tunnel</option>
+              <option value="gyroid">Procedural Gyroid Minimal SDF</option>
+            </select>
+
+            <div class="mb-4">
+              <label class="block text-xs font-mono text-gray-400 mb-1">Редактор фрагментного кода (void main):</label>
+              <textarea id="shader-code-editor" class="w-full h-44 bg-black/80 text-emerald-400 p-3 rounded-xl border border-white/10 font-mono text-xs focus:outline-none resize-none leading-relaxed whitespace-pre"></textarea>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button id="shader-compile-btn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-brand-pink to-brand-blue text-white font-extrabold text-xs flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-brand-pink/20">
+              <i data-lucide="play" class="w-4 h-4"></i> Компилировать и применить
+            </button>
+            <button id="shader-copy-btn" class="px-4 py-3 rounded-xl glass-panel text-white font-mono text-xs border border-white/10 hover:border-brand-cyan/50 flex items-center gap-1.5">
+              <i data-lucide="copy" class="w-4 h-4"></i> Копия
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="h-96 generator-preview-box relative">
+            <canvas id="glsl-canvas" class="w-full h-full"></canvas>
+            <div id="shader-status-badge" class="absolute top-3 right-3 text-[10px] font-mono text-emerald-400 bg-black/75 px-2.5 py-1 rounded-md border border-emerald-500/30">
+              Shader Compiled (60 FPS)
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
   <section id="interactive-lab" class="py-24 px-6 md:px-12 bg-black/40 border-y border-white/5 relative z-10">
     <div class="max-w-7xl mx-auto">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
@@ -587,6 +919,229 @@
     </div>
   </section>
 
+  <!-- SECTION 4: USER WORKSPACE (ИЗБРАННОЕ, КОЛЛЕКЦИИ, JSON ЭКСПОРТ/ИМПОРТ) -->
+  <section id="user-workspace" class="py-24 px-6 md:px-12 bg-black/40 border-t border-white/5 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/10 text-brand-cyan text-xs font-mono mb-3 border border-brand-cyan/25">
+            <i data-lucide="folder-git-2" class="w-3.5 h-3.5"></i>
+            User Workspace // Local Database & Collections
+          </div>
+          <h2 class="text-3xl md:text-5xl font-black text-white">USER <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-pink">WORKSPACE</span></h2>
+          <p class="text-gray-400 text-sm max-w-2xl mt-2 font-mono text-xs">
+            Персональное рабочее пространство: управление избранными алгоритмами, история просмотров, пользовательские коллекции эффектов, мгновенный экспорт и импорт всего профиля в JSON.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 mt-6 md:mt-0">
+          <button id="ws-export-json-btn" class="px-4 py-2.5 rounded-xl glass-panel text-white font-mono text-xs border border-white/10 hover:border-brand-cyan/50 transition-all flex items-center gap-2">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-brand-cyan"></i> Экспорт JSON
+          </button>
+          <label class="px-4 py-2.5 rounded-xl glass-panel text-white font-mono text-xs border border-white/10 hover:border-brand-cyan/50 transition-all flex items-center gap-2 cursor-pointer">
+            <i data-lucide="upload" class="w-3.5 h-3.5 text-brand-pink"></i> Импорт JSON
+            <input type="file" id="ws-import-json-file" accept=".json" class="hidden">
+          </label>
+          <button id="ws-clear-all-btn" class="px-3 py-2.5 rounded-xl glass-panel text-rose-400 font-mono text-xs border border-rose-500/20 hover:bg-rose-500/10 transition-all" title="Очистить всё">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Workspace Stats Overview -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="glass-panel p-4 rounded-xl border border-white/10">
+          <div class="text-[11px] font-mono text-gray-400">В Избранном</div>
+          <div id="ws-stat-favs" class="text-2xl font-black text-brand-cyan font-mono mt-1">0</div>
+        </div>
+        <div class="glass-panel p-4 rounded-xl border border-white/10">
+          <div class="text-[11px] font-mono text-gray-400">Просмотрено за сессию</div>
+          <div id="ws-stat-history" class="text-2xl font-black text-brand-blue font-mono mt-1">0</div>
+        </div>
+        <div class="glass-panel p-4 rounded-xl border border-white/10">
+          <div class="text-[11px] font-mono text-gray-400">Активных коллекций</div>
+          <div id="ws-stat-collections" class="text-2xl font-black text-brand-pink font-mono mt-1">1</div>
+        </div>
+        <div class="glass-panel p-4 rounded-xl border border-white/10">
+          <div class="text-[11px] font-mono text-gray-400">Хранилище localStorage</div>
+          <div id="ws-stat-storage" class="text-2xl font-black text-amber-400 font-mono mt-1">~0 KB</div>
+        </div>
+      </div>
+
+      <!-- Favorites Grid / Empty state -->
+      <div class="glass-panel rounded-2xl p-6 border border-white/10 mb-8">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="bookmark" class="w-4 h-4 text-brand-cyan"></i> Сохранённые эффекты (Favorites)
+          </h3>
+          <span id="ws-favs-count-badge" class="text-xs font-mono text-brand-cyan">0 сохранено</span>
+        </div>
+        <div id="ws-favorites-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated by catalog.js / app.js -->
+        </div>
+        <div id="ws-favorites-empty" class="text-center py-12 text-gray-500 font-mono text-xs">
+          <i data-lucide="bookmark-minus" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>
+          У вас пока нет сохранённых эффектов. Нажмите иконку закладки на любой карточке каталога!
+        </div>
+      </div>
+
+      <!-- History Reel -->
+      <div class="glass-panel rounded-2xl p-6 border border-white/10">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="history" class="w-4 h-4 text-brand-blue"></i> Недавно открытые (History)
+          </h3>
+          <button id="ws-clear-history-btn" class="text-xs font-mono text-gray-400 hover:text-white transition-colors">Очистить историю</button>
+        </div>
+        <div id="ws-history-list" class="flex flex-wrap gap-2 text-xs font-mono">
+          <!-- Dynamically populated tags -->
+          <span class="text-gray-500 text-xs font-mono py-2">История пуста. Откройте любой алгоритм в каталоге!</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: AI MOTION ASSISTANT & CODE OPTIMIZER -->
+  <section id="ai-assistant" class="py-24 px-6 md:px-12 bg-black/60 border-t border-white/5 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-pink/10 text-brand-pink text-xs font-mono mb-3 border border-brand-pink/25">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            Neural Creative Suite // Motion Architecture
+          </div>
+          <h2 class="text-3xl md:text-5xl font-black text-white">AI MOTION <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink via-purple-400 to-brand-cyan">ASSISTANT</span></h2>
+          <p class="text-gray-400 text-sm max-w-2xl mt-2 font-mono text-xs">
+            Интеллектуальный ассистент по креативной разработке: архитектурные шаблоны промптов, генератор идей, оптимизатор CSS/JS анимаций для 60-120 FPS и объяснение формул с офлайн-движком эвристик.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Prompts & Templates Library (Left) -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+          <div class="glass-panel rounded-2xl p-6 border border-white/10">
+            <h3 class="text-base font-bold text-white mb-3 flex items-center gap-2">
+              <i data-lucide="file-code-2" class="w-4 h-4 text-brand-cyan"></i> Шаблоны инженерных промптов
+            </h3>
+            <p class="text-xs text-gray-400 font-mono mb-4">
+              Выберите готовый промпт для генерации сложных анимаций в Claude, GPT-4 или встроенном ассистенте:
+            </p>
+            <div class="flex flex-col gap-2">
+              <button class="ai-prompt-tpl p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all group" data-prompt="Создай математически строгий GLSL фрагментный шейдер для бесконечного 3D тоннеля с неоновым свечением и логарифмической спиралью в стиле Cyberpunk.">
+                <div class="text-xs font-bold text-white group-hover:text-brand-cyan">🌌 3D Cyberpunk GLSL Tunnel</div>
+                <div class="text-[11px] text-gray-400 font-mono mt-0.5 truncate">Raymarching, SDF, Neon Glow, Exponential fog</div>
+              </button>
+              <button class="ai-prompt-tpl p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all group" data-prompt="Напиши микро-библиотеку на Three.js для морфинга системы из 5000 частиц между сферой и тором с использованием GSAP 3 timeline и кастомного шейдера с аддитивным блендингом.">
+                <div class="text-xs font-bold text-white group-hover:text-brand-cyan">✨ Three.js Particle Morphing 60FPS</div>
+                <div class="text-[11px] text-gray-400 font-mono mt-0.5 truncate">Three.BufferGeometry, Custom Shader, AdditiveBlend</div>
+              </button>
+              <button class="ai-prompt-tpl p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all group" data-prompt="Разработай бескомпромиссную кинетическую типографику на чистом CSS3 GPU: бесконечный бегущий трек с ускорением от скролла и эффектом резинового искажения (skewY/matrix3d).">
+                <div class="text-xs font-bold text-white group-hover:text-brand-cyan">⚡ Kinetic Typography & Inertial Scroll</div>
+                <div class="text-[11px] text-gray-400 font-mono mt-0.5 truncate">matrix3d, will-change, GPU compositing, skew</div>
+              </button>
+              <button class="ai-prompt-tpl p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all group" data-prompt="Оптимизируй Canvas 2D симуляцию частиц для мобильных устройств: замени расчет гипотенузы Math.sqrt на квадратичное расстояние dx*dx+dy*dy, добавь пространственное разбиение Grid Partitioning и отключи теневые фильтры.">
+                <div class="text-xs font-bold text-white group-hover:text-brand-cyan">🛠 Оптимизация производительности Canvas</div>
+                <div class="text-[11px] text-gray-400 font-mono mt-0.5 truncate">Spatial Hashing, zero GC allocations, fast math</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Optimizer Tool -->
+          <div class="glass-panel rounded-2xl p-6 border border-white/10">
+            <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
+              <i data-lucide="gauge" class="w-4 h-4 text-emerald-400"></i> Экспресс-Оптимизатор Анимаций
+            </h3>
+            <p class="text-xs text-gray-400 font-mono mb-3">Вставьте проблемный CSS/JS для анализа рендеринга и поиска узких мест:</p>
+            <textarea id="ai-opt-input" placeholder="/* Вставьте ваш CSS или JS код для анализа FPS узких мест... */" class="w-full h-24 bg-black/70 text-emerald-400 p-2.5 rounded-xl border border-white/10 font-mono text-xs focus:outline-none resize-none leading-relaxed mb-3"></textarea>
+            <button id="ai-opt-analyze-btn" class="w-full py-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30 font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i> Проверить на FPS-угрозы (will-change, reflow)
+            </button>
+            <div id="ai-opt-report" class="mt-3 text-xs font-mono hidden p-3 rounded-xl bg-black/80 border border-emerald-500/20 text-gray-300"></div>
+          </div>
+        </div>
+
+        <!-- Chat / Interactive Dialog (Right) -->
+        <div class="lg:col-span-7 flex flex-col h-[580px] glass-panel rounded-2xl border border-white/10 overflow-hidden">
+          <div class="p-4 border-b border-white/10 flex items-center justify-between bg-black/40">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-brand-pink/20 text-brand-pink flex items-center justify-center font-bold text-xs border border-brand-pink/30">
+                AI
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center gap-2">
+                  Apex Neural Motion Engine
+                  <span class="text-[10px] px-2 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-mono">Offline Ready</span>
+                </div>
+                <div class="text-[11px] text-gray-400 font-mono">Анализ геометрии, математики и GPU-стека</div>
+              </div>
+            </div>
+            <button id="ai-clear-chat-btn" class="text-xs font-mono text-gray-500 hover:text-white" title="Очистить диалог">Сброс</button>
+          </div>
+
+          <!-- Messages Stream -->
+          <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto flex flex-col gap-3 font-mono text-xs">
+            <div class="ai-bubble-bot p-4 rounded-xl leading-relaxed">
+              <span class="text-brand-cyan font-bold block mb-1">Apex AI Assistant:</span>
+              Приветствую! Я архитектурный ассистент ApexMotion. Могу объяснить математику любого из 998 алгоритмов каталога, разобрать формулы SDF-шейдеров, оптимизировать рендеринг под 120 FPS или предложить креативный стек под вашу задачу. Выберите готовый шаблон слева или напишите вопрос ниже!
+            </div>
+          </div>
+
+          <!-- Input Bar -->
+          <div class="p-3 border-t border-white/10 bg-black/60 flex items-center gap-2">
+            <input type="text" id="ai-chat-input" placeholder="Задайте вопрос по физике, шейдерам или коду..." class="flex-1 bg-black/80 border border-white/10 rounded-xl px-4 py-3 text-white text-xs font-mono focus:outline-none focus:border-brand-pink">
+            <button id="ai-chat-send-btn" class="px-5 py-3 rounded-xl bg-gradient-to-r from-brand-pink to-brand-blue text-white font-bold text-xs hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 shadow-lg shadow-brand-pink/20">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Отправить</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: REALTIME PERFORMANCE MONITOR & HARDWARE HUD -->
+  <section id="performance-monitor" class="py-16 px-6 md:px-12 bg-black/80 border-t border-white/5 relative z-10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold">Hardware Performance Engine</span>
+        </div>
+        <h3 class="text-xl font-black text-white">Мониторинг аппаратных ресурсов и частоты кадров</h3>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="perf-stat-pill flex items-center gap-2">
+          <span class="text-gray-400">FPS:</span>
+          <span id="hud-fps" class="text-emerald-400 font-bold font-mono text-sm">60</span>
+        </div>
+        <div class="perf-stat-pill flex items-center gap-2">
+          <span class="text-gray-400">Frame Time:</span>
+          <span id="hud-frametime" class="text-brand-cyan font-bold font-mono text-sm">16.6ms</span>
+        </div>
+        <div class="perf-stat-pill flex items-center gap-2">
+          <span class="text-gray-400">WebGL:</span>
+          <span class="text-brand-blue font-bold font-mono text-sm">Active 2.0</span>
+        </div>
+        <div class="perf-stat-pill flex items-center gap-2">
+          <span class="text-gray-400">GPU Acceleration:</span>
+          <span class="text-brand-pink font-bold font-mono text-sm">Hardware</span>
+        </div>
+        <div class="perf-stat-pill flex items-center gap-2">
+          <span class="text-gray-400">Профиль:</span>
+          <select id="perf-profile-select" class="bg-transparent text-white font-mono text-xs focus:outline-none cursor-pointer">
+            <option value="ultra" class="bg-gray-900">Ultra (120 FPS Max)</option>
+            <option value="high" selected class="bg-gray-900">High (60 FPS Normal)</option>
+            <option value="balanced" class="bg-gray-900">Balanced (45 FPS)</option>
+            <option value="battery" class="bg-gray-900">Battery Saver (30 FPS)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
   <!-- SECTION 4: ПРОФЕССИОНАЛЬНЫЙ CODE PLAYGROUND & ИЗОЛИРОВАННАЯ ПЕСОЧНИЦА -->
   <div id="live-executor-modal" class="fixed inset-0 z-50 bg-black/85 hidden items-center justify-center p-4 backdrop-blur-md">
     <div class="glass-panel w-full max-w-6xl rounded-2xl border border-brand-cyan/30 p-6 shadow-2xl relative flex flex-col max-h-[92vh]">
@@ -631,6 +1186,9 @@
               Исходный код алгоритма:
             </span>
             <div class="flex items-center gap-2">
+              <button id="live-share-btn" class="text-gray-400 hover:text-brand-cyan flex items-center gap-1 text-[11px] font-mono" title="Поделиться прямой ссылкой">
+                <i data-lucide="share-2" class="w-3 h-3"></i> Поделиться
+              </button>
               <button id="live-copy-btn" class="text-gray-400 hover:text-white flex items-center gap-1 text-[11px] font-mono">
                 <i data-lucide="copy" class="w-3 h-3"></i> Скопировать
               </button>
@@ -774,5 +1332,38 @@
   <script src="app.js"></script>
   <script src="technologies_data.js"></script>
   <script src="catalog.js"></script>
+  <script src="suite_engines.js"></script>
+  <!-- COMMAND PALETTE MODAL (CTRL+K / CMD+K) -->
+  <div id="command-palette-modal" class="fixed inset-0 z-50 bg-black/85 hidden items-start justify-center pt-24 px-4 backdrop-blur-md">
+    <div class="glass-panel w-full max-w-2xl rounded-2xl border border-brand-cyan/40 p-4 shadow-2xl relative flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <!-- Search input bar -->
+      <div class="relative flex items-center border-b border-white/10 pb-3">
+        <i data-lucide="search" class="w-5 h-5 text-brand-cyan ml-2"></i>
+        <input type="text" id="cmd-input" placeholder="Введите команду, название эффекта, категорию (#shaders) или раздел..." class="w-full bg-transparent pl-3 pr-8 py-2 text-white placeholder-gray-500 font-mono text-sm focus:outline-none">
+        <button id="cmd-close-btn" class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Quick Commands & Search Results -->
+      <div id="cmd-results" class="max-h-96 overflow-y-auto py-3 flex flex-col gap-1.5 font-mono text-xs">
+        <!-- Dynamically populated or default shortcuts -->
+      </div>
+
+      <!-- Footer Help -->
+      <div class="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-gray-500">
+        <div class="flex items-center gap-3">
+          <span><kbd class="px-1.5 py-0.5 rounded bg-white/10 text-gray-300">↑↓</kbd> Навигация</span>
+          <span><kbd class="px-1.5 py-0.5 rounded bg-white/10 text-gray-300">Enter</kbd> Выбрать</span>
+          <span><kbd class="px-1.5 py-0.5 rounded bg-white/10 text-gray-300">Esc</kbd> Закрыть</span>
+        </div>
+        <div class="text-brand-cyan">ApexMotion 998 Palette</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" aria-live="polite"></div>
+
 </body>
 </html>

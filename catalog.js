@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Isolated Sandbox Playground execution in iframe
-  function openPlayground(item) {
+  function openPlayground(item, updateHash = true) {
     currentActiveItem = item;
     if (window.ApexSoundFX) ApexSoundFX.click();
 
@@ -429,6 +429,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     liveExecutorModal.classList.remove('hidden');
     liveExecutorModal.classList.add('flex');
+
+    if (updateHash) {
+      history.replaceState(null, '', `#effect/${item.id}`);
+    }
+
+    if (window.addApexHistory) {
+      window.addApexHistory(item);
+    }
 
     runSandboxCode();
   }
@@ -529,11 +537,30 @@ document.addEventListener('DOMContentLoaded', () => {
   // Playground actions
   if (liveRunBtn) liveRunBtn.addEventListener('click', runSandboxCode);
 
+  const liveShareBtn = document.getElementById('live-share-btn');
+  if (liveShareBtn) {
+    liveShareBtn.addEventListener('click', () => {
+      if (!currentActiveItem) return;
+      const shareUrl = `${window.location.origin}${window.location.pathname}#effect/${currentActiveItem.id}`;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        if (window.ApexToast) {
+          ApexToast.show(`Ссылка на #${currentActiveItem.id} скопирована!`, 'success', 'share-2');
+        } else {
+          alert('Ссылка скопирована: ' + shareUrl);
+        }
+        if (window.ApexSoundFX) ApexSoundFX.click();
+      });
+    });
+  }
+
   if (liveCloseBtn) {
     liveCloseBtn.addEventListener('click', () => {
       liveSandboxFrame.srcdoc = '';
       liveExecutorModal.classList.add('hidden');
       liveExecutorModal.classList.remove('flex');
+      if (window.location.hash.startsWith('#effect/')) {
+        history.replaceState(null, '', window.location.pathname + '#catalog-1000');
+      }
     });
   }
 
@@ -611,4 +638,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial grid render
   renderGrid();
+
+  // Hash-based deep routing (#effect/ID, #lab, #generators, etc.)
+  function handleHashRoute() {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    if (hash.startsWith('#effect/')) {
+      const id = parseInt(hash.replace('#effect/', ''));
+      if (!isNaN(id)) {
+        const item = data.find(x => x.id === id);
+        if (item) {
+          openPlayground(item, false);
+          const catSec = document.getElementById('catalog-1000');
+          if (catSec) catSec.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    } else {
+      const targetEl = document.querySelector(hash);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+
+  window.addEventListener('hashchange', handleHashRoute);
+  // Check hash on initial load
+  setTimeout(handleHashRoute, 250);
 });
