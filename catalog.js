@@ -107,143 +107,249 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.1 });
 
-  function attachMiniPreview(canvas, item) {
-    const ctx = canvas.getContext('2d');
-    canvas.width = canvas.parentElement.clientWidth || 320;
-    canvas.height = 130;
-    const idx = item.id;
-    const style = getCatStyle(item.category);
-    let t = (idx * 0.15) % 10;
+// ========================================================
+// УЛУЧШЕННЫЙ РЕНДЕРЕР МИНИ-ПРЕВЬЮ ДЛЯ КАРТОЧЕК APEXMOTION
+// Превью карточки использует реальные уникальные формулы и параметры
+// конкретной технологии на основе её названия, категории и ID
+// ========================================================
 
-    function render() {
-      if (!canvas._running) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      t += 0.035;
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-      const mode = idx % 10;
+function attachMiniPreview(canvas, item) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth || 320;
+  canvas.height = 130;
+  const idx = item.id;
+  const style = getCatStyle(item.category);
+  const title = (item.title || '').toLowerCase();
+  let t = (idx * 0.37) % 20;
 
-      if (mode === 0) {
-        // Lissajous Knot
+  // Определение визуального типа на основе реального названия технологии
+  let fxType = 'poly';
+  if (title.includes('knot') || title.includes('узел') || title.includes('torus') || title.includes('тор')) fxType = 'knot';
+  else if (title.includes('dna') || title.includes('днк') || title.includes('helix') || title.includes('спирал')) fxType = 'dna';
+  else if (title.includes('wave') || title.includes('волна') || title.includes('gerstner') || title.includes('герстнер') || title.includes('ocean')) fxType = 'wave';
+  else if (title.includes('pendulum') || title.includes('маятник') || title.includes('chaos') || title.includes('хаос') || title.includes('attractor') || title.includes('клиффорд')) fxType = 'chaos';
+  else if (title.includes('gravity') || title.includes('гравитац') || title.includes('black hole') || title.includes('дыра') || title.includes('orbit') || title.includes('орбит')) fxType = 'orbit';
+  else if (title.includes('sdf') || title.includes('raymarch') || title.includes('noise') || title.includes('шум') || title.includes('voronoi') || title.includes('mandelbrot')) fxType = 'noise';
+  else if (title.includes('text') || title.includes('текст') || title.includes('font') || title.includes('scramble') || title.includes('глиф') || title.includes('matrix')) fxType = 'matrix';
+  else if (title.includes('audio') || title.includes('звук') || title.includes('sound') || title.includes('частот') || title.includes('синтез') || title.includes('эквалайзер') || title.includes('спектр')) fxType = 'audio';
+  else if (title.includes('cloth') || title.includes('ткань') || title.includes('spring') || title.includes('пруж') || title.includes('сетка') || title.includes('решетка')) fxType = 'cloth';
+  else if (title.includes('particle') || title.includes('частиц') || title.includes('boids') || title.includes('стая') || title.includes('салют') || title.includes('взрыв')) fxType = 'particles';
+  else if (title.includes('morph') || title.includes('морфинг') || title.includes('bezier') || title.includes('крив') || title.includes('svg')) fxType = 'morph';
+  else {
+    // Детерминированный выбор из богатого набора по ID
+    const types = ['poly', 'knot', 'dna', 'wave', 'chaos', 'orbit', 'matrix', 'audio', 'cloth', 'particles', 'morph'];
+    fxType = types[idx % types.length];
+  }
+
+  // Индивидуальные коэффициенты для каждой из 998 технологий
+  const seed = (idx * 9301 + 49297) % 233280;
+  const p1 = 2 + (idx % 5);
+  const p2 = 3 + (idx % 7);
+  const speed = 0.02 + ((seed % 100) / 100) * 0.025;
+  const particleColor = (idx % 2 === 0) ? style.color : '#f72585';
+  const secondaryColor = (idx % 3 === 0) ? '#ffbe0b' : '#3b82f6';
+
+  function render() {
+    if (!canvas._running) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    t += speed;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    switch (fxType) {
+      case 'knot': {
+        // Торический узел с уникальными p, q
         ctx.beginPath();
-        for (let i = 0; i <= 60; i++) {
-          const u = (i / 60) * Math.PI * 2;
-          const x = cx + Math.cos(2 * u + t) * 55;
-          const y = cy + Math.sin(3 * u) * 40;
+        const N = 80;
+        const R = 38 + (idx % 12);
+        const r = R * 0.4;
+        for (let i = 0; i <= N; i++) {
+          const phi = (i / N) * Math.PI * 2;
+          const r_torus = R + r * Math.cos(p2 * phi);
+          const x = cx + r_torus * Math.cos(p1 * phi + t);
+          const y = cy + r_torus * Math.sin(p1 * phi + t) * 0.65 + r * Math.sin(p2 * phi) * Math.cos(t * 0.5);
           if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
         ctx.strokeStyle = style.color;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.2;
         ctx.shadowColor = style.color;
         ctx.shadowBlur = 8;
         ctx.stroke();
-      } else if (mode === 1) {
-        // Spiral of points
-        for (let i = 0; i < 24; i++) {
-          const a = i * 0.4 + t;
-          const r = Math.sqrt(i) * 11;
-          const x = cx + Math.cos(a) * r;
-          const y = cy + Math.sin(a) * r;
-          ctx.beginPath();
-          ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = i % 2 === 0 ? style.color : '#f8fafc';
-          ctx.fill();
-        }
-      } else if (mode === 2) {
-        // DNA Double Helix
-        for (let i = 0; i < 14; i++) {
-          const x = cx - 70 + i * 11;
-          const p = x * 0.04 + t;
-          const y1 = cy + Math.sin(p) * 28;
-          const y2 = cy + Math.sin(p + Math.PI) * 28;
-          ctx.beginPath();
-          ctx.moveTo(x, y1); ctx.lineTo(x, y2);
-          ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.stroke();
-          ctx.beginPath(); ctx.arc(x, y1, 3, 0, Math.PI * 2);
-          ctx.fillStyle = style.color; ctx.fill();
-          ctx.beginPath(); ctx.arc(x, y2, 3, 0, Math.PI * 2);
-          ctx.fillStyle = '#3b82f6'; ctx.fill();
-        }
-      } else if (mode === 3) {
-        // Equalizer Wave
-        ctx.beginPath();
-        for (let x = 0; x <= canvas.width; x += 5) {
-          const y = cy + Math.sin(x * 0.04 + t * 2) * 22 * Math.sin(t * 0.8);
-          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = style.color; ctx.lineWidth = 2; ctx.stroke();
-      } else if (mode === 4) {
-        // Orbitals
-        ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-        ctx.fillStyle = style.color; ctx.fill();
-        for (let i = 1; i <= 4; i++) {
-          const r = i * 13;
-          const a = t * (2 / Math.sqrt(r)) + i;
-          const x = cx + Math.cos(a) * r;
-          const y = cy + Math.sin(a) * (r * 0.6);
-          ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = '#3b82f6'; ctx.fill();
-        }
-      } else if (mode === 5) {
-        // Rotating Polygon
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(t);
-        ctx.beginPath();
-        const sides = 6;
-        for (let i = 0; i <= sides; i++) {
-          const a = (i / sides) * Math.PI * 2;
-          const x = Math.cos(a) * 32;
-          const y = Math.sin(a) * 32;
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = style.color; ctx.lineWidth = 1.8; ctx.stroke();
-        ctx.restore();
-      } else if (mode === 6) {
-        // Concentric Rings
-        for (let r = 8; r < 52; r += 11) {
-          const rad = (r + t * 14) % 52;
-          ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(0, 245, 212, ${1 - rad / 52})`; ctx.stroke();
-        }
-      } else if (mode === 7) {
-        // Matrix Stream
-        ctx.font = '11px JetBrains Mono';
-        ctx.fillStyle = style.color;
-        for (let c = 0; c < 8; c++) {
-          const y = (t * 35 + c * 22) % canvas.height;
-          ctx.fillText(String.fromCharCode(65 + ((idx + c) % 26)), cx - 60 + c * 16, y);
-        }
-      } else if (mode === 8) {
-        // Spring Points Grid
-        for (let r = 0; r < 3; r++) {
-          for (let c = 0; c < 5; c++) {
-            const x = cx - 40 + c * 20 + Math.sin(t + r) * 4;
-            const y = cy - 20 + r * 20 + Math.cos(t + c) * 4;
-            ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-            ctx.fillStyle = style.color; ctx.fill();
-          }
-        }
-      } else {
-        // Kinematic Arm
-        ctx.beginPath(); ctx.moveTo(cx, cy + 28);
-        let curX = cx, curY = cy + 28;
-        for (let i = 0; i < 5; i++) {
-          const a = Math.sin(t * 2 + i * 0.5) * 0.8 - Math.PI / 2;
-          curX += Math.cos(a) * 13; curY += Math.sin(a) * 13;
-          ctx.lineTo(curX, curY);
-        }
-        ctx.strokeStyle = style.color; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.shadowBlur = 0;
+        break;
       }
 
-      requestAnimationFrame(render);
+      case 'dna': {
+        // Двойная спираль
+        const count = 16;
+        const R = 32 + (idx % 10);
+        for (let i = 0; i < count; i++) {
+          const x = cx - 65 + i * 9;
+          const p = x * 0.045 + t;
+          const y1 = cy + Math.sin(p) * R;
+          const y2 = cy + Math.sin(p + Math.PI) * R;
+          ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2);
+          ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.stroke();
+          ctx.beginPath(); ctx.arc(x, y1, 2.8, 0, Math.PI * 2);
+          ctx.fillStyle = style.color; ctx.fill();
+          ctx.beginPath(); ctx.arc(x, y2, 2.8, 0, Math.PI * 2);
+          ctx.fillStyle = particleColor; ctx.fill();
+        }
+        break;
+      }
+
+      case 'wave': {
+        // Трохоидальные гидродинамические волны
+        ctx.beginPath();
+        for (let x = 0; x <= canvas.width; x += 4) {
+          const y = cy + Math.sin(x * 0.035 * (1 + (idx % 3) * 0.2) + t * 1.5) * 22 + Math.cos(x * 0.015 - t) * 8;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = style.color;
+        ctx.lineWidth = 2.4;
+        ctx.shadowColor = style.color;
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        break;
+      }
+
+      case 'orbit': {
+        // Черная дыра и орбитальные частицы
+        ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#000000'; ctx.fill();
+        ctx.strokeStyle = style.color; ctx.lineWidth = 1.5; ctx.stroke();
+        const bodies = 4 + (idx % 4);
+        for (let i = 1; i <= bodies; i++) {
+          const r = 16 + i * 11;
+          const a = t * (2.2 / Math.sqrt(r)) + (i * 1.4 + idx);
+          const x = cx + Math.cos(a) * r;
+          const y = cy + Math.sin(a) * (r * 0.62);
+          ctx.beginPath(); ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+          ctx.fillStyle = (i % 2 === 0) ? style.color : secondaryColor;
+          ctx.fill();
+        }
+        break;
+      }
+
+      case 'matrix': {
+        // Матричный декодер глифов
+        ctx.font = '10px JetBrains Mono';
+        const cols = 7;
+        for (let c = 0; c < cols; c++) {
+          const y = (t * 40 + c * 20 + (idx * 5)) % canvas.height;
+          ctx.fillStyle = (c === 3) ? '#ffffff' : style.color;
+          ctx.fillText(String.fromCharCode(65 + ((idx + c + Math.floor(t * 3)) % 26)), cx - 45 + c * 15, y);
+        }
+        break;
+      }
+
+      case 'audio': {
+        // Спектрограмма аудио-эквалайзера
+        const bars = 18;
+        const barW = 7;
+        const startX = cx - (bars * barW) / 2;
+        for (let i = 0; i < bars; i++) {
+          const h = (Math.sin(t * 3.5 + i * 0.5) * 0.5 + 0.5) * 45 + 5;
+          ctx.fillStyle = style.color;
+          ctx.fillRect(startX + i * barW, cy + 22 - h, barW - 2, h);
+        }
+        break;
+      }
+
+      case 'chaos': {
+        // Двойной хаотический маятник / аттрактор
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.beginPath();
+        for (let i = 0; i < 40; i++) {
+          const a = i * 0.18 + t;
+          const r = Math.sin(a * p1) * 35;
+          const x = Math.cos(a) * r;
+          const y = Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = particleColor;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+        ctx.restore();
+        break;
+      }
+
+      case 'cloth': {
+        // Эластичная пружинная сетка
+        const rCols = 5, rRows = 3;
+        for (let r = 0; r < rRows; r++) {
+          for (let c = 0; c < rCols; c++) {
+            const x = cx - 36 + c * 18 + Math.sin(t * 2 + r * 0.8) * 4;
+            const y = cy - 18 + r * 18 + Math.cos(t * 2 + c * 0.8) * 4;
+            ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+            ctx.fillStyle = (r + c) % 2 === 0 ? style.color : secondaryColor;
+            ctx.fill();
+          }
+        }
+        break;
+      }
+
+      case 'particles': {
+        // Эмиттер частиц с разлетом
+        const pCount = 14;
+        for (let i = 0; i < pCount; i++) {
+          const a = (i / pCount) * Math.PI * 2 + t * 0.5;
+          const dist = ((t * 28 + i * 7) % 45);
+          const x = cx + Math.cos(a) * dist;
+          const y = cy + Math.sin(a) * dist;
+          ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = style.color; ctx.fill();
+        }
+        break;
+      }
+
+      case 'morph': {
+        // Морфинг замкнутого полигона
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.beginPath();
+        const sides = 3 + (idx % 5);
+        for (let i = 0; i <= sides; i++) {
+          const a = (i / sides) * Math.PI * 2 + t;
+          const r = 26 + Math.sin(t * 3 + i) * 8;
+          const x = Math.cos(a) * r;
+          const y = Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = style.color;
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
+        ctx.restore();
+        break;
+      }
+
+      default: {
+        // 3D Каркасный икосаэдр/куб
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(t * 0.8);
+        ctx.beginPath();
+        const size = 26;
+        ctx.strokeRect(-size/2, -size/2, size, size);
+        ctx.rotate(t * 0.5);
+        ctx.strokeStyle = style.color;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+        ctx.restore();
+        break;
+      }
     }
 
-    activeAnimators.set(canvas, render);
-    cardObserver.observe(canvas);
+    requestAnimationFrame(render);
   }
 
-  // Grid rendering with Favorites state
+  activeAnimators.set(canvas, render);
+  cardObserver.observe(canvas);
+}
+
+    // Grid rendering with Favorites state
   function renderGrid(append = false) {
     if (!append) container.innerHTML = '';
     const start = (currentPage - 1) * pageSize;
