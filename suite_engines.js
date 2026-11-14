@@ -921,8 +921,36 @@ void main() {
       return `Анализ запроса: "${query}"\nДля реализации данного эффекта рекомендуется архитектура WebGL + GSAP Timeline. Для обеспечения 60 FPS вынесите математический расчет фаз в Web Worker или GPU Shader. В каталоге ApexMotion доступны готовые аналоги в категориях "GLSL & Raymarching" и "Physics & Simulation".`;
     }
 
+    // Бесплатный внешний AI провайдер (Pollinations AI Engine)
+    async function fetchFreeAIResponse(prompt) {
+      const systemPrompt = "Ты — Apex AI Motion Assistant, встроенный эксперт платформы ApexMotion (создана Стариковым Дмитрием Сергеевичем). Отвечай технически точно, профессионально, по-русски, с примерами формул или кода (Three.js, Canvas, GSAP, CSS GPU, Shaders). Будь лаконичен и полезен разработчикам.";
+      const encodedPrompt = encodeURIComponent(prompt);
+      const encodedSys = encodeURIComponent(systemPrompt);
+      const url = `https://text.pollinations.ai/${encodedPrompt}?system=${encodedSys}&model=openai`;
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 сек таймаут
+        const resp = await fetch(url, {
+          method: 'GET',
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (resp.ok) {
+          const text = await resp.text();
+          if (text && text.trim().length > 0) {
+            return text.trim();
+          }
+        }
+      } catch (err) {
+        console.warn('Free AI Provider offline, falling back to local heuristic engine:', err);
+      }
+      // Офлайн фоллбэк при сетевых проблемах
+      return generateAIResponse(prompt);
+    }
+
     if (sendBtn && chatInput) {
-      const handleSend = () => {
+      const handleSend = async () => {
         const val = chatInput.value.trim();
         if (!val) return;
         appendMessage('Вы', val, false);
@@ -930,11 +958,28 @@ void main() {
 
         if (window.ApexSoundFX) ApexSoundFX.click();
 
-        setTimeout(() => {
-          const resp = generateAIResponse(val);
-          appendMessage('Apex AI Assistant', resp, true);
+        // Показываем индикатор генерации
+        const thinkingId = 'ai-thinking-' + Date.now();
+        const bubble = document.createElement('div');
+        bubble.id = thinkingId;
+        bubble.className = 'ai-bubble-bot p-4 rounded-xl leading-relaxed flex items-center gap-2 text-gray-400 italic font-mono text-xs';
+        bubble.innerHTML = '<span class="w-2 h-2 rounded-full bg-brand-pink animate-ping"></span> Apex AI генерирует ответ...';
+        messages.appendChild(bubble);
+        messages.scrollTop = messages.scrollHeight;
+
+        try {
+          const aiResponse = await fetchFreeAIResponse(val);
+          const thinkingEl = document.getElementById(thinkingId);
+          if (thinkingEl) thinkingEl.remove();
+
+          appendMessage('Apex Neural AI', aiResponse, true);
           if (window.ApexSoundFX) ApexSoundFX.hover();
-        }, 400);
+        } catch (e) {
+          const thinkingEl = document.getElementById(thinkingId);
+          if (thinkingEl) thinkingEl.remove();
+
+          appendMessage('Apex AI Assistant', generateAIResponse(val), true);
+        }
       };
 
       sendBtn.addEventListener('click', handleSend);
